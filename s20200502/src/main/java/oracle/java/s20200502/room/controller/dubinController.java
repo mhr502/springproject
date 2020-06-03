@@ -1,0 +1,157 @@
+package oracle.java.s20200502.room.controller;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import oracle.java.s20200502.room.model.Room;
+import oracle.java.s20200502.room.service.RoomImgService;
+import oracle.java.s20200502.room.service.RoomReservationService;
+import oracle.java.s20200502.room.service.RoomService;
+
+@Controller
+public class dubinController {
+
+	private static final Logger logger = LoggerFactory.getLogger(dubinController.class);
+
+	@Autowired
+	private RoomService rs;
+	@Autowired
+	private RoomImgService ris;
+	@Autowired
+	private RoomReservationService res;
+
+	@RequestMapping("main.do")
+	public String main(Model model) {
+		return "room/main";
+	}
+
+	@RequestMapping("join.do")
+	public String join(Model model) {
+		return "room/join";
+	}
+
+	@RequestMapping("login.do")
+	public String login(Model model) {
+		return "room/login";
+	}
+	@RequestMapping("list.do")
+	public String list(Model model) {
+		return "room/list";
+	}
+
+	@RequestMapping("roomInsertGo.do")
+	public String roomInsertGo(Model model) {
+		return "room/roomInsert";
+	}
+
+	@RequestMapping(value = "roomInsert.do", method = RequestMethod.POST)
+	public String roomInsert(MultipartHttpServletRequest mtfRequest, Model model) {
+
+		// 대표이미지
+		MultipartFile file = mtfRequest.getFile("file2");
+		String uploadPath = mtfRequest.getSession().getServletContext().getRealPath("/upload/");
+
+		logger.info("originalName: " + file.getOriginalFilename());
+		logger.info("size: " + file.getSize());
+		logger.info("contextType: " + file.getContentType());
+		String savedNameThum = null;
+		try {
+			savedNameThum = uploadFile(file.getOriginalFilename(), file.getBytes(), uploadPath);
+			System.out.println("savedNameThum -> " + savedNameThum);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		logger.info("savedNameThum: " + savedNameThum);
+
+		// 이미지들
+		List<MultipartFile> fileList = mtfRequest.getFiles("file");
+		List<String> pathList = new ArrayList<String>();
+		for (MultipartFile mf : fileList) {
+			logger.info("originalName: " + mf.getOriginalFilename());
+			logger.info("size: " + mf.getSize());
+			logger.info("contextType: " + mf.getContentType());
+			String savedName = null;
+			try {
+				savedName = uploadFile(mf.getOriginalFilename(), mf.getBytes(), uploadPath);
+				System.out.println("savedName -> " + savedName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			pathList.add(savedName);
+		}
+
+		// dto set
+		Room room = new Room();
+		// room.setM_num(Integer.parseInt(mtfRequest.getParameter("m_num")));
+		room.setM_num(1);
+		String ro_title = mtfRequest.getParameter("ro_title");
+		room.setRo_title(ro_title);
+		room.setRo_content(mtfRequest.getParameter("ro_content"));
+		room.setRo_mReservation(Integer.parseInt(mtfRequest.getParameter("morning")));
+		room.setRo_aftReservation(Integer.parseInt(mtfRequest.getParameter("afternoon")));
+		room.setRo_nitReservation(Integer.parseInt(mtfRequest.getParameter("night")));
+		room.setRo_spot1(mtfRequest.getParameter("spot1"));
+		room.setRo_spot2(mtfRequest.getParameter("spot2"));
+		room.setRo_img(savedNameThum);
+
+		int result = rs.insert(room);
+		int ro_num = rs.titleToNum(ro_title);
+		int result2 = ris.insert(pathList, ro_num);
+
+		return "room/roomInsert";
+	}
+
+	private String uploadFile(String originalName, byte[] fileData, String uploadPath) throws Exception {
+		UUID uid = UUID.randomUUID();
+		// requestPath = requestPath + "/resources/image";
+		System.out.println("uploadPath -> " + uploadPath);
+		// Directory 생성
+		File fileDirectory = new File(uploadPath);
+		if (!fileDirectory.exists()) {
+			fileDirectory.mkdirs();
+			System.out.println("업로드용 폴더 생성: " + uploadPath);
+		}
+		String savedName = uid.toString() + "_" + originalName;
+		// String path1 =
+		// "C:\\spring\\springSrc39\\.metadata\\.plugins\\org.eclipse.wst.server...";
+		File target = new File(uploadPath, savedName);
+		// File target = new File(requestPath, savedName);
+		FileCopyUtils.copy(fileData, target);
+
+		return savedName;
+	}
+
+	@RequestMapping(value = "calendar.do", method = RequestMethod.POST)
+	public String calendar2(@RequestParam(value = "roomNo") int roomNo,
+			@RequestParam(value = "ddayYear", defaultValue = "0") int ddayYear,
+			@RequestParam(value = "ddayMonth", defaultValue = "0") int ddayMonth,
+			@RequestParam(value = "ddayOption", defaultValue = "default") String ddayOption, Model model) {
+		Map<String, Object> map = res.getOneDayList(roomNo, ddayYear, ddayMonth, ddayOption);
+
+		model.addAttribute("calendarList", map.get("calendarList"));
+		model.addAttribute("ddayYear", map.get("ddayYear"));
+		model.addAttribute("ddayMonth", map.get("ddayMonth"));
+
+		return "room/roomContent2";
+	}
+
+}

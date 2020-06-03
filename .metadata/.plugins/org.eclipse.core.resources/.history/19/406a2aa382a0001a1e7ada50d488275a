@@ -1,0 +1,19 @@
+package oracle.java.s20200502.room.dao;
+
+public class Snippet {
+	public String calendar2(@RequestParam(value = "roomNo") int roomNo,
+								@RequestParam(value = "ddayYear", defaultValue = "0") int ddayYear,
+								@RequestParam(value = "ddayMonth", defaultValue = "0") int ddayMonth,
+								@RequestParam(value = "ddayOption", defaultValue = "default") String ddayOption,
+								Model model) {
+			Map<String, Object> map = res.getOneDayList(roomNo, ddayYear, ddayMonth, ddayOption);
+			
+			model.addAttribute("calendarList", map.get("calendarList"));
+			model.addAttribute("ddayYear", map.get("ddayYear"));
+			model.addAttribute("ddayMonth", map.get("ddayMonth"));
+			
+			return "room/roomContent2";
+		}
+		
+}
+

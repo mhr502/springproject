@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<typeAlias alias="Room" type="oracle.java.s20200502.room.model.Room"/>
+		<typeAlias alias="Member" type="oracle.java.s20200502.main.model.Member"/>
+		<typeAlias alias="RoomImg" type="oracle.java.s20200502.room.model.RoomImg"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="Database/Room.xml"/>
+		<mapper resource="Database/RoomImg.xml"/>
+	</mappers>
+</configuration>

@@ -1,0 +1,10 @@
+package oracle.java.s20200502.room.dao;
+
+public class CalendarVo {
+	private int year;
+	private int month;
+	private int day;
+	private int week;
+	private String date;
+	
+}

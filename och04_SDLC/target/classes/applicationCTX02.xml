@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+<!-- 	<bean id="student" class="com.oracle.sdlc02.Student"  scope="singleton">  -->
+	<bean id="student" class="com.oracle.sdlc02.Student"  scope="prototype">
+	<!-- [[Prototype]] 객체의 데이터 프로퍼티는 get 액세스를 위해 상속되어 자식 객체의 프로퍼티처럼 사용할 수 있다. **하지만 set 액세스는 허용되지 않는다.	-->
+		<constructor-arg value="흑수돌"></constructor-arg>
+		<constructor-arg value="30"></constructor-arg>
+	</bean>
+
+</beans>

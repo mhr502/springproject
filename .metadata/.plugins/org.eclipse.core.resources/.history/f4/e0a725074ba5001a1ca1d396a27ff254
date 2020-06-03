@@ -1,0 +1,192 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import="java.io.PrintWriter"%>
+<%@ include file="header.jsp"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+
+<!-- 제이쿼리 (부트스트랩보다 위로) -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- 부트스트랩 -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<script type="text/javascript"
+	src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=9pb7eu6jme"></script>
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap"
+	rel="stylesheet">
+
+<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+
+
+<style>
+th, td {
+	text-align: center;
+}
+
+.form-inline .form-control {
+	width: 40vw;
+}
+
+.main_slide {
+	position: relative;
+	left: 50px;
+}
+
+#title_style {
+	font-family: 'Noto Sans KR', sans-serif;
+	font-size: 40px;
+}
+
+.right_menu {
+	position: relative;
+	left: 650px;
+	bottom: 350px;
+}
+</style>
+<script type="text/javascript">
+
+	</script>
+<!-- <script>
+		$(function() {
+			$("#pw1, #pw2").keyup(function() {
+				var pw1Value = $("#pw1").val();
+				var pw2Value = $("#pw2").val();
+	
+				if (pw1Value != pw2Value) {
+					$("#message").text("패스워드가 일치하지 않습니다.");
+				} else {
+					$("#message").text("패스워드가 일치합니다.");
+				}
+			})
+		});
+	</script> -->
+<title>관리자 사이트</title>
+
+</head>
+<body>
+
+	<div class="container">
+
+		<div>
+			<!-- 점보트론 -->
+			<div class="jumbotron" style="min-width: 100%;">
+				<div class="row">
+					<div class="col-lg-6"> <!-- 왼쪽 -->
+						<p id="title_style">${room.ro_title }</p>
+						<div id="demo" class="carousel slide" data-ride="carousel">
+							<div class="main_slide" style="width: 400px;">
+								<div class="carousel-inner">
+									<a class="carousel-control-prev" href="#demo" data-slide="prev">
+										<span class="carousel-control-prev-icon"></span>
+									</a>
+									<ul class="carousel-indicators">
+										<li data-target="#demo" data-slide-to="0" class="active"></li>
+										<li data-target="#demo" data-slide-to="1"></li>
+										<li data-target="#demo" data-slide-to="2"></li>
+									</ul>
+									<div class="carousel-item active">
+										<c:forEach items="#{roomImg }" var="img">
+											<c:if test="${img.i_seq == 1}">
+												<img
+													src="${pageContext.request.contextPath }/upload/${img.i_contentImg}"
+													alt="Place" width="500px" height="400px">
+											</c:if>
+										</c:forEach>
+									</div>
+									<div class="carousel-item ">
+										<c:forEach items="#{roomImg }" var="img">
+											<c:if test="${img.i_seq == 2}">
+												<img
+													src="${pageContext.request.contextPath }/upload/${img.i_contentImg}"
+													alt="Place" width="500px" height="400px">
+											</c:if>
+										</c:forEach>
+									</div>
+									<div class="carousel-item">
+										<c:forEach items="#{roomImg }" var="img">
+											<c:if test="${img.i_seq == 3}">
+												<img
+													src="${pageContext.request.contextPath }/upload/${img.i_contentImg}"
+													alt="Place" width="500px" height="400px">
+											</c:if>
+										</c:forEach>
+									</div>
+									<a class="carousel-control-next" href="#demo" data-slide="next">
+										<span class="carousel-control-next-icon"></span>
+									</a>
+								</div>
+							</div>
+
+
+						</div>
+
+					<div class="col-lg-6">
+						<!-- 오른쪽 -->
+
+					</div>
+
+					<div class="right_menu">
+
+						<a href="calendar.do?ro_num=${room.ro_num }&ro_loc=${room.ro_loc}"><input
+							type="button" value="예약하기"></a>
+
+
+
+					</div>
+
+
+					${room.ro_loc } 
+					방번호 : ${room.ro_num }<br> 
+					멤버번호 : ${room.m_num }<br>
+					방내용 : ${room.ro_content }<br> 
+					조회수 : ${room.ro_hit }<br>
+					이용료(오전) : ${room.ro_mReservation }<br> 
+					이용료(오후) : ${room.ro_aftReservation }<br> 
+					이용료(저녁) : ${room.ro_nitReservation }<br>
+
+					<div id="map" style="width: 450px; height: 500px;"></div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- row 태그 -->
+	</div>
+
+</body>
+<script type="text/javascript">
+	var mapDiv = document.getElementById('map');
+	
+	var map = new naver.maps.Map('map', {center : new naver.maps.LatLng(${room.ro_spot1},${room.ro_spot2}), zoom : 17,minZoom : 7,
+		
+		zoomControl: true, //컨트롤 표시 여부
+		zoomControlOptions: {
+			position: naver.maps.Position.TOP_RIGHT 
+			}
+		});
+	
+	
+	var marker = new naver.maps.Marker({position : new naver.maps.LatLng(${room.ro_spot1},${room.ro_spot2}), map : map});
+	var $window = $(window);
+	
+	function getMapSize() {
+		var size = new naver.maps.Size($window.width() - 15,
+					$window.height() - 15);
+	
+			return size;
+	};
+	
+	$window.on('resize', function() {
+			map.setSize(getMapSize());
+	});
+	</script>
+
+</html>
+
+
+

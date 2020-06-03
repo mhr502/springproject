@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Room">
+	<!-- Use type aliases to avoid typing the full classname every time. -->
+	<resultMap id="RoomResult" type="Room">
+		<result property="ro_num" column="ro_num" />
+		<result property="m_num" column="m_num" />
+		<result property="ro_title" column="ro_title" />
+		<result property="ro_content" column="ro_content" />
+		<result property="ro_hit" column="ro_hit" />
+		<result property="ro_spot1" column="ro_spot1" />
+		<result property="ro_spot2" column="ro_spot2" />
+		<result property="ro_img" column="ro_img" />
+	</resultMap>
+	<select id="listAll" parameterType="Room" resultMap="RoomResult">
+		select *
+		from room
+	</select>
+
+
+	<select id="roomReserveCheck" parameterType="map"
+		resultType="oracle.java.s20200502.room.model.RoomReserveVo">
+		SELECT
+		re.re_num,
+		r.ro_num,
+		re.rv_date,
+		re.totalcost,
+		FROM
+		reservation re
+		JOIN
+		room r
+		ON
+		re.ro_num =
+		r.ro_num
+		JOIN
+		tb_payment_state ps
+		ON
+		re.payment_state_cd =
+		ps.payment_state_cd
+		WHERE
+		re.room_no = #{roomNo}
+		AND
+		CASE
+		WHEN
+		re.reserve_stay_day = 1
+		THEN
+		(date(#{date}) BETWEEN reserve_checkin_date
+		AND reserve_checkout_date)
+		ELSE
+		(date(#{date}) BETWEEN
+		reserve_checkin_date AND reserve_checkout_date-1)
+		END
+	</select>
+</mapper>
+	
+	
+	

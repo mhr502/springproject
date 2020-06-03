@@ -1,0 +1,136 @@
+@charset "UTF-8";
+//calendar css**
+.studyroom-part {
+	width: 284px;
+	position:relative;
+	left:300px;
+}
+
+.studyroom-option {
+	width: 264px;
+}
+
+.day-part {
+	width: 91px;
+}
+
+.time-part {
+	width: 384px;
+	position:relative;
+	left: 300px;
+}
+
+.sort-wrapper {
+	margin: 10px 6px 6px 10px;
+	display: flex;
+	border-bottom: 1px solid #dddddd;
+	font-size: 12px;
+}
+
+.sort-wrapper>div {
+	padding: 3px;
+}
+
+.sort-wrapper>div:hover {
+	border-bottom: 1px solid #111111;
+}
+
+.sort-selected {
+	font-weight: bold;
+	border-bottom: 1px solid #111111;
+}
+
+.sort-korean {
+	margin-left: 6px;
+}
+
+.reserve-date {
+	padding-top: 5px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 770px;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+.studyroom-date-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 5px 2px;
+}
+
+.studyroom-week-of-day {
+	margin-left: 5px;
+	font-size: 10px;
+	width: 12px;
+	height: 22px;
+	line-height: 22px;
+}
+
+.studyroom-day {
+	text-align: center;
+	width: 34px;
+	height: 22px;
+	font-size: 17px;
+	font-weight: bold;
+}
+
+.saturday {
+	color: #31597E;
+	font-weight: bold;
+}
+
+.sunday {
+	color: #AF2D2D;
+	font-weight: bold;
+}
+
+.studyroom-date-wrapper-active {
+	background-color: #333333;
+}
+
+.studyroom-date-wrapper-active>* {
+	color: white;
+}
+
+.css_test {
+	display: none;
+} 
+.mini-calendar{
+position: relative;
+left: 800px;
+width: 900px;
+
+}
+.reserve-container{
+width:600px;
+position: relative;
+left: 700px;
+
+
+}
+#calendar{
+background-color:black;
+color:white;
+text-align:center;
+width: 400px;
+height: 200px;
+
+}
+td {
+	width: 50px;
+	height: 50px;
+	text-align: center;
+	font-size: 20px;
+	font-family: 굴림;
+	border: 2px border-color:#020202;
+	border-radius: 8px; /*모서리 둥글게*/
+}
+.button {
+
+background: transparent;
+border: none;
+	
+}

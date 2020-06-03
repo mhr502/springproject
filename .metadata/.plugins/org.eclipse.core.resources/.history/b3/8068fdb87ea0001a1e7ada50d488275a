@@ -1,0 +1,44 @@
+package oracle.java.s20200502.room.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import oracle.java.s20200502.room.model.Room;
+import oracle.java.s20200502.room.model.RoomReserveVo;
+
+@Repository
+public class RoomDaoImpl implements RoomDao {
+
+	@Autowired
+	private SqlSession session;
+
+	@Override
+	public int insert(Room room) {
+		System.out.println("RoomDaoImpl insert Start...");
+		return session.insert("insert", room);
+	}
+
+	@Override
+	public int titleToNum(String ro_title) {
+		System.out.println("RoomDaoImpl titleToNum Start...");
+		return session.selectOne("titleToNum", ro_title);
+	}
+
+	@Override
+	public List<Room> list(Room room) {
+		// TODO Auto-generated method stub
+		return session.selectList("listAll",room);
+	}
+
+	@Override
+	public RoomReserveVo roomReserveCheck(Map<String, Object> paramMap) {
+	
+		return  session.selectOne(ROOM_NS+"roomReserveCheck", map);
+
+
+	}
+}

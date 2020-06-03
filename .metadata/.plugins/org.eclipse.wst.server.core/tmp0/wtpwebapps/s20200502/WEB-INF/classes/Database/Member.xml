@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- <mapper namespace="Member">
+
+<resultMap id="MemberResult" type="Member">
+	<result property="ur_id" column="ur_id"/>
+	<result property="ur_passwd" column="ur_passwd"/>
+</resultMap>
+<select id="idselect" resultMap="MemberResult">
+	select ur_id,ur_passwd from member where ur_id=#{ur_id} and ur_passwd=#{ur_passwd}
+</select>
+</mapper> -->
